@@ -260,6 +260,77 @@ public class Markers {
 
         shape.draw(c);
 
+        if (direction.equals(NO_DIRECTION)) {
+            // Everything after this point is for drawing the arrow image, so return the bitmap as-is for no arrow
+            return bm;
+        }
+
+        /**
+         * Draw the arrow - all dimensions should be relative to px so the arrow is drawn the same
+         * size for all orientations
+         */
+        // Height of the cutout in the bottom of the triangle that makes it an arrow (0=triangle)
+        final float CUTOUT_HEIGHT = mPx / 12;
+        Path path = new Path();
+        float x1 = 0, y1 = 0;  // Tip of arrow
+        float x2 = 0, y2 = 0;  // lower left
+        float x3 = 0, y3 = 0; // cutout in arrow bottom
+        float x4 = 0, y4 = 0; // lower right
+
+        if (direction.equals(NORTH) || direction.equals(SOUTH) ||
+                direction.equals(NORTH_EAST) || direction.equals(SOUTH_EAST) ||
+                direction.equals(NORTH_WEST) || direction.equals(SOUTH_WEST)) {
+            // Arrow is drawn pointing NORTH
+            // Tip of arrow
+            x1 = mPx / 2;
+            y1 = 0;
+
+            // lower left
+            x2 = (mPx / 2) - (mArrowWidthPx / 2);
+            y2 = mArrowHeightPx;
+
+            // cutout in arrow bottom
+            x3 = mPx / 2;
+            y3 = mArrowHeightPx - CUTOUT_HEIGHT;
+
+            // lower right
+            x4 = (mPx / 2) + (mArrowWidthPx / 2);
+            y4 = mArrowHeightPx;
+        } else if (direction.equals(EAST) || direction.equals(WEST)) {
+            // Arrow is drawn pointing WEST
+            // Tip of arrow
+            x1 = 0;
+            y1 = mPx / 2;
+
+            // lower left
+            x2 = mArrowHeightPx;
+            y2 = (mPx / 2) - (mArrowWidthPx / 2);
+
+            // cutout in arrow bottom
+            x3 = mArrowHeightPx - CUTOUT_HEIGHT;
+            y3 = mPx / 2;
+
+            // lower right
+            x4 = mArrowHeightPx;
+            y4 = (mPx / 2) + (mArrowWidthPx / 2);
+        }
+
+        path.setFillType(Path.FillType.EVEN_ODD);
+        path.moveTo(x1, y1);
+        path.lineTo(x2, y2);
+        path.lineTo(x3, y3);
+        path.lineTo(x4, y4);
+        path.lineTo(x1, y1);
+        path.close();
+
+        // Rotate arrow around (rotationX, rotationY) point
+        Matrix matrix = new Matrix();
+        matrix.postRotate(directionAngle, rotationX, rotationY);
+        path.transform(matrix);
+
+        c.drawPath(path, arrowPaintFill);
+        c.drawPath(path, mArrowPaintStroke);
+
         return bm;
     }
 }
