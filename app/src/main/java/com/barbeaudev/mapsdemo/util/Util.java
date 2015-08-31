@@ -1,4 +1,4 @@
-package com.barbeaudev.mapsdemo;
+package com.barbeaudev.mapsdemo.util;
 
 import java.util.Random;
 

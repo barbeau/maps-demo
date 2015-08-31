@@ -1,6 +1,5 @@
 package com.barbeaudev.mapsdemo;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -16,6 +15,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import com.barbeaudev.mapsdemo.util.MarkerUtil;
+import com.barbeaudev.mapsdemo.util.Util;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;

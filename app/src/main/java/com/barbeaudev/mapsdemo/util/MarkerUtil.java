@@ -1,7 +1,9 @@
-package com.barbeaudev.mapsdemo;
+package com.barbeaudev.mapsdemo.util;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+
+import com.barbeaudev.mapsdemo.R;
 
 import android.app.Activity;
 import android.app.Application;
