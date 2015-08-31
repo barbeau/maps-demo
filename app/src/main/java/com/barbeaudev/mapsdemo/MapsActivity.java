@@ -8,6 +8,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -42,11 +43,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        initMap();
         initIcons();
 
         int NUM_MARKERS = 100;
-        float baseLat = -34;
-        float baseLong = 151;
+        float baseLat = 28.0580f;
+        float baseLong = -82.4168f;
         LatLng l;
         final LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
@@ -58,10 +60,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // Randomly get direction
             int dirIndex = Util.randInt(0, 8);
 
-            // Add a marker in Sydney and move the camera
+            // Add a marker
             l = new LatLng(baseLat + latOffset, baseLong + longOffset);
             mMap.addMarker(new MarkerOptions()
                     .position(l).title("Marker " + i)
+                    .flat(true)
                     .icon(Markers
                             .getBitmapDescriptorForBusStopDirection(mDirections.get(dirIndex))));
             builder.include(l);
@@ -76,6 +79,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
             }
         }, 500);
+    }
+
+    private void initMap() {
+        UiSettings uiSettings = mMap.getUiSettings();
+        // Show the location on the map
+        mMap.setMyLocationEnabled(true);
+        // Hide MyLocation button on map, since we have our own button
+        uiSettings.setMyLocationButtonEnabled(false);
+        // Hide Zoom controls
+        uiSettings.setZoomControlsEnabled(false);
     }
 
     private void initIcons() {
