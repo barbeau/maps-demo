@@ -1,8 +1,11 @@
 package com.barbeaudev.mapsdemo;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -11,14 +14,27 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
+/**
+ * Attempt to replicate jumping markers issue on Maps API v2
+ *
+ * See http://stackoverflow.com/questions/32276570/jumping-markers-on-android-maps-api-v2
+ */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private static final int NUM_MARKERS = 200;
+
+    private Context mContext;
     private GoogleMap mMap;
-    private ArrayList<String> mDir = new ArrayList<>();
+    private boolean mRefresh = true;
+    private ArrayList<String> mDir = new ArrayList<>(9);
+    private ArrayList<Marker> mMarkers = new ArrayList<>(NUM_MARKERS);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +44,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        mContext = this;
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mRefresh = false;
+    }
 
     /**
      * Manipulates the map once available.
@@ -45,31 +67,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         initMap();
         initIcons();
+        addMarkers();
+    }
 
-        int NUM_MARKERS = 200;
-        float baseLat = 28.0580f;
-        float baseLong = -82.4168f;
+    private void addMarkers() {
+        // Clear any existing markers on map
+        for (Marker m : mMarkers) {
+            m.remove();
+        }
+        mMarkers.clear();
+
+        float baseLat = 28.050f;
+        float baseLong = -82.425f;
         LatLng l;
         final LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
         for(int i = 0; i < NUM_MARKERS; i++) {
             // Randomly position the markers
-            float latOffset = Util.randInt(2, 100) * 0.00001f;
-            float longOffset = Util.randInt(2, 100) * 0.00001f;
+            float latOffset = Util.randInt(2, 100) * 0.0005f;
+            float longOffset = Util.randInt(2, 100) * 0.0005f;
 
             // Randomly get direction
             int index = Util.randInt(0, 8);
 
             // Add a marker
             l = new LatLng(baseLat + latOffset, baseLong + longOffset);
-            mMap.addMarker(new MarkerOptions()
+            Marker m = mMap.addMarker(new MarkerOptions()
                             .position(l)
-                            .icon(MarkerUtil.getBitmapDescriptorForBusStopDirection(mDir.get(index)))
+                            .icon(MarkerUtil
+                                    .getBitmapDescriptorForBusStopDirection(mDir.get(index)))
                             .flat(true)
                             .anchor(MarkerUtil.getXPercentOffsetForDirection(mDir.get(index)),
                                     MarkerUtil.getYPercentOffsetForDirection(mDir.get(index)))
 
             );
+
+            // Add marker to list
+            mMarkers.add(m);
+
+            // Include marker in bounds builder so we can zoom to bounds
             builder.include(l);
         }
 
@@ -79,9 +115,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
             }
         }, 500);
+
+        if (mRefresh) {
+            // Schedule a refresh of the markers in 60 seconds
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(mContext, "Refreshing!", Toast.LENGTH_SHORT).show();
+                    addMarkers();
+                }
+            }, TimeUnit.SECONDS.toMillis(60));
+        }
     }
 
     private void initMap() {
