@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private ArrayList<String> mDirections = new ArrayList();
+    private ArrayList<String> mDirections = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +52,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         for(int i = 0; i < NUM_MARKERS; i++) {
             // Randomly position the markers
-            float latOffset = Util.randInt(2, 100) * 0.001f;
-            float longOffset = Util.randInt(2, 100) * 0.001f;
+            float latOffset = Util.randInt(2, 100) * 0.000001f;
+            float longOffset = Util.randInt(2, 100) * 0.000001f;
 
             // Randomly get direction
             int dirIndex = Util.randInt(0, 8);
