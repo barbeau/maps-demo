@@ -52,8 +52,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         for(int i = 0; i < NUM_MARKERS; i++) {
             // Randomly position the markers
-            float latOffset = Util.randInt(2, 100) * 0.000001f;
-            float longOffset = Util.randInt(2, 100) * 0.000001f;
+            float latOffset = Util.randInt(2, 100) * 0.00001f;
+            float longOffset = Util.randInt(2, 100) * 0.00001f;
 
             // Randomly get direction
             int dirIndex = Util.randInt(0, 8);
