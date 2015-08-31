@@ -18,9 +18,9 @@ import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 
 /**
- * Created by Sean on 8/31/2015.
+ * Utility for creating markers that are used in OneBusAway Android
  */
-public class Markers {
+public class MarkerUtil {
 
     public static final String NORTH = "N";
 
@@ -332,5 +332,75 @@ public class Markers {
         c.drawPath(path, mArrowPaintStroke);
 
         return bm;
+    }
+
+    /**
+     * Gets the % X offset used for the bus stop icon, for the given direction
+     *
+     * @param direction Bus stop direction, obtained from ObaStop.getDirection() and defined in
+     *                  constants in this class
+     * @return percent offset X for the bus stop icon that should be used for that direction
+     */
+    public static float getXPercentOffsetForDirection(String direction) {
+        if (direction.equals(NORTH)) {
+            // Middle of icon
+            return 0.5f;
+        } else if (direction.equals(NORTH_WEST)) {
+            return 0.5f + mPercentOffset;
+        } else if (direction.equals(WEST)) {
+            return 0.5f + mPercentOffset;
+        } else if (direction.equals(SOUTH_WEST)) {
+            return 0.5f + mPercentOffset;
+        } else if (direction.equals(SOUTH)) {
+            // Middle of icon
+            return 0.5f;
+        } else if (direction.equals(SOUTH_EAST)) {
+            return 0.5f - mPercentOffset;
+        } else if (direction.equals(EAST)) {
+            return 0.5f - mPercentOffset;
+        } else if (direction.equals(NORTH_EAST)) {
+            return 0.5f - mPercentOffset;
+        } else if (direction.equals(NO_DIRECTION)) {
+            // Middle of icon
+            return 0.5f;
+        } else {
+            // Assume middle of icon
+            return 0.5f;
+        }
+    }
+
+    /**
+     * Gets the % Y offset used for the bus stop icon, for the given direction
+     *
+     * @param direction Bus stop direction, obtained from ObaStop.getDirection() and defined in
+     *                  constants in this class
+     * @return percent offset Y for the bus stop icon that should be used for that direction
+     */
+    public static float getYPercentOffsetForDirection(String direction) {
+        if (direction.equals(NORTH)) {
+            return 0.5f + mPercentOffset;
+        } else if (direction.equals(NORTH_WEST)) {
+            return 0.5f + mPercentOffset;
+        } else if (direction.equals(WEST)) {
+            // Middle of icon
+            return 0.5f;
+        } else if (direction.equals(SOUTH_WEST)) {
+            return 0.5f - mPercentOffset;
+        } else if (direction.equals(SOUTH)) {
+            return 0.5f - mPercentOffset;
+        } else if (direction.equals(SOUTH_EAST)) {
+            return 0.5f - mPercentOffset;
+        } else if (direction.equals(EAST)) {
+            // Middle of icon
+            return 0.5f;
+        } else if (direction.equals(NORTH_EAST)) {
+            return 0.5f + mPercentOffset;
+        } else if (direction.equals(NO_DIRECTION)) {
+            // Middle of icon
+            return 0.5f;
+        } else {
+            // Assume middle of icon
+            return 0.5f;
+        }
     }
 }

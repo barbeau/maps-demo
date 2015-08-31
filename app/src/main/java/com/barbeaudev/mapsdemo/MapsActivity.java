@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private ArrayList<String> mDirections = new ArrayList<>();
+    private ArrayList<String> mDir = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,15 +58,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             float longOffset = Util.randInt(2, 100) * 0.00001f;
 
             // Randomly get direction
-            int dirIndex = Util.randInt(0, 8);
+            int index = Util.randInt(0, 8);
 
             // Add a marker
             l = new LatLng(baseLat + latOffset, baseLong + longOffset);
             mMap.addMarker(new MarkerOptions()
-                    .position(l).title("Marker " + i)
-                    .flat(true)
-                    .icon(Markers
-                            .getBitmapDescriptorForBusStopDirection(mDirections.get(dirIndex))));
+                            .position(l)
+                            .icon(MarkerUtil.getBitmapDescriptorForBusStopDirection(mDir.get(index)))
+                            .flat(true)
+                            .anchor(MarkerUtil.getXPercentOffsetForDirection(mDir.get(index)),
+                                    MarkerUtil.getYPercentOffsetForDirection(mDir.get(index)))
+
+            );
             builder.include(l);
         }
 
@@ -93,17 +96,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void initIcons() {
         // Load directions so they can be randomized
-        mDirections.add(Markers.NORTH);
-        mDirections.add(Markers.NORTH_WEST);
-        mDirections.add(Markers.WEST);
-        mDirections.add(Markers.SOUTH_WEST);
-        mDirections.add(Markers.SOUTH);
-        mDirections.add(Markers.SOUTH_EAST);
-        mDirections.add(Markers.EAST);
-        mDirections.add(Markers.NORTH_EAST);
-        mDirections.add(Markers.NO_DIRECTION);
+        mDir.add(MarkerUtil.NORTH);
+        mDir.add(MarkerUtil.NORTH_WEST);
+        mDir.add(MarkerUtil.WEST);
+        mDir.add(MarkerUtil.SOUTH_WEST);
+        mDir.add(MarkerUtil.SOUTH);
+        mDir.add(MarkerUtil.SOUTH_EAST);
+        mDir.add(MarkerUtil.EAST);
+        mDir.add(MarkerUtil.NORTH_EAST);
+        mDir.add(MarkerUtil.NO_DIRECTION);
 
         // Init icons
-        Markers.loadIcons(this);
+        MarkerUtil.loadIcons(this);
     }
 }
