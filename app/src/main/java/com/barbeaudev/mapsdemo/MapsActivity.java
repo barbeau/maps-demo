@@ -46,7 +46,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         initMap();
         initIcons();
 
-        int NUM_MARKERS = 100;
+        int NUM_MARKERS = 200;
         float baseLat = 28.0580f;
         float baseLong = -82.4168f;
         LatLng l;
