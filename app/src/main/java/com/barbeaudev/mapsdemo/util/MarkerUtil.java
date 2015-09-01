@@ -18,6 +18,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 
 /**
  * Utility for creating markers that are used in OneBusAway Android
@@ -44,7 +45,7 @@ public class MarkerUtil {
 
     public static final int NUM_DIRECTIONS = 9; // 8 directions + undirected mStops
 
-    private static BitmapDescriptor[] bus_stop_icons = new BitmapDescriptor[NUM_DIRECTIONS];
+    private static Bitmap[] bus_stop_icons = new Bitmap[NUM_DIRECTIONS];
 
     private static int mPx; // Bus stop icon size
 
@@ -70,25 +71,25 @@ public class MarkerUtil {
      */
     public static BitmapDescriptor getBitmapDescriptorForBusStopDirection(String direction) {
         if (direction.equals(NORTH)) {
-            return bus_stop_icons[0];
+            return BitmapDescriptorFactory.fromBitmap(bus_stop_icons[0]);
         } else if (direction.equals(NORTH_WEST)) {
-            return bus_stop_icons[1];
+            return BitmapDescriptorFactory.fromBitmap(bus_stop_icons[1]);
         } else if (direction.equals(WEST)) {
-            return bus_stop_icons[2];
+            return BitmapDescriptorFactory.fromBitmap(bus_stop_icons[2]);
         } else if (direction.equals(SOUTH_WEST)) {
-            return bus_stop_icons[3];
+            return BitmapDescriptorFactory.fromBitmap(bus_stop_icons[3]);
         } else if (direction.equals(SOUTH)) {
-            return bus_stop_icons[4];
+            return BitmapDescriptorFactory.fromBitmap(bus_stop_icons[4]);
         } else if (direction.equals(SOUTH_EAST)) {
-            return bus_stop_icons[5];
+            return BitmapDescriptorFactory.fromBitmap(bus_stop_icons[5]);
         } else if (direction.equals(EAST)) {
-            return bus_stop_icons[6];
+            return BitmapDescriptorFactory.fromBitmap(bus_stop_icons[6]);
         } else if (direction.equals(NORTH_EAST)) {
-            return bus_stop_icons[7];
+            return BitmapDescriptorFactory.fromBitmap(bus_stop_icons[7]);
         } else if (direction.equals(NO_DIRECTION)) {
-            return bus_stop_icons[8];
+            return BitmapDescriptorFactory.fromBitmap(bus_stop_icons[8]);
         } else {
-            return bus_stop_icons[8];
+            return BitmapDescriptorFactory.fromBitmap(bus_stop_icons[8]);
         }
     }
 
@@ -114,15 +115,15 @@ public class MarkerUtil {
         mArrowPaintStroke.setStrokeWidth(1.0f);
         mArrowPaintStroke.setAntiAlias(true);
 
-        bus_stop_icons[0] = BitmapDescriptorFactory.fromBitmap(createBusStopIcon(context, NORTH));
-        bus_stop_icons[1] = BitmapDescriptorFactory.fromBitmap(createBusStopIcon(context, NORTH_WEST));
-        bus_stop_icons[2] = BitmapDescriptorFactory.fromBitmap(createBusStopIcon(context, WEST));
-        bus_stop_icons[3] = BitmapDescriptorFactory.fromBitmap(createBusStopIcon(context, SOUTH_WEST));
-        bus_stop_icons[4] = BitmapDescriptorFactory.fromBitmap(createBusStopIcon(context, SOUTH));
-        bus_stop_icons[5] = BitmapDescriptorFactory.fromBitmap(createBusStopIcon(context, SOUTH_EAST));
-        bus_stop_icons[6] = BitmapDescriptorFactory.fromBitmap(createBusStopIcon(context, EAST));
-        bus_stop_icons[7] = BitmapDescriptorFactory.fromBitmap(createBusStopIcon(context, NORTH_EAST));
-        bus_stop_icons[8] = BitmapDescriptorFactory.fromBitmap(createBusStopIcon(context, NO_DIRECTION));
+        bus_stop_icons[0] = createBusStopIcon(context, NORTH);
+        bus_stop_icons[1] = createBusStopIcon(context, NORTH_WEST);
+        bus_stop_icons[2] = createBusStopIcon(context, WEST);
+        bus_stop_icons[3] = createBusStopIcon(context, SOUTH_WEST);
+        bus_stop_icons[4] = createBusStopIcon(context, SOUTH);
+        bus_stop_icons[5] = createBusStopIcon(context, SOUTH_EAST);
+        bus_stop_icons[6] = createBusStopIcon(context, EAST);
+        bus_stop_icons[7] = createBusStopIcon(context, NORTH_EAST);
+        bus_stop_icons[8] = createBusStopIcon(context, NO_DIRECTION);
     }
 
     private static Bitmap createBusStopIcon(Context context, String direction) {
@@ -142,13 +143,13 @@ public class MarkerUtil {
             // Don't draw the arrow
             bm = Bitmap.createBitmap(mPx, mPx, Bitmap.Config.ARGB_8888);
             c = new Canvas(bm);
-            shape = r.getDrawable(R.drawable.map_stop_icon);
+            shape = ContextCompat.getDrawable(context, R.drawable.map_stop_icon);
             shape.setBounds(0, 0, bm.getWidth(), bm.getHeight());
         } else if (direction.equals(NORTH)) {
             directionAngle = 0f;
             bm = Bitmap.createBitmap(mPx, (int) (mPx + mBuffer), Bitmap.Config.ARGB_8888);
             c = new Canvas(bm);
-            shape = r.getDrawable(R.drawable.map_stop_icon);
+            shape = ContextCompat.getDrawable(context, R.drawable.map_stop_icon);
             shape.setBounds(0, (int) mBuffer, mPx, bm.getHeight());
             // Shade with darkest color at tip of arrow
             arrowPaintFill.setShader(
@@ -163,7 +164,7 @@ public class MarkerUtil {
             bm = Bitmap.createBitmap((int) (mPx + mBuffer),
                     (int) (mPx + mBuffer), Bitmap.Config.ARGB_8888);
             c = new Canvas(bm);
-            shape = r.getDrawable(R.drawable.map_stop_icon);
+            shape = ContextCompat.getDrawable(context, R.drawable.map_stop_icon);
             shape.setBounds((int) mBuffer, (int) mBuffer, bm.getWidth(), bm.getHeight());
             // Shade with darkest color at tip of arrow
             arrowPaintFill.setShader(
@@ -177,7 +178,7 @@ public class MarkerUtil {
             directionAngle = 0f;  // Arrow is drawn pointing West, so no rotation
             bm = Bitmap.createBitmap((int) (mPx + mBuffer), mPx, Bitmap.Config.ARGB_8888);
             c = new Canvas(bm);
-            shape = r.getDrawable(R.drawable.map_stop_icon);
+            shape = ContextCompat.getDrawable(context, R.drawable.map_stop_icon);
             shape.setBounds((int) mBuffer, 0, bm.getWidth(), bm.getHeight());
             arrowPaintFill.setShader(
                     new LinearGradient(0, bm.getHeight() / 2, mArrowHeightPx, bm.getHeight() / 2,
@@ -191,7 +192,7 @@ public class MarkerUtil {
             bm = Bitmap.createBitmap((int) (mPx + mBuffer),
                     (int) (mPx + mBuffer), Bitmap.Config.ARGB_8888);
             c = new Canvas(bm);
-            shape = r.getDrawable(R.drawable.map_stop_icon);
+            shape = ContextCompat.getDrawable(context, R.drawable.map_stop_icon);
             shape.setBounds((int) mBuffer, 0, bm.getWidth(), mPx);
             arrowPaintFill.setShader(
                     new LinearGradient(0, bm.getHeight(), mBuffer, bm.getHeight() - mBuffer,
@@ -204,7 +205,7 @@ public class MarkerUtil {
             directionAngle = 180f;  // Arrow is drawn N, rotate 180 degrees
             bm = Bitmap.createBitmap(mPx, (int) (mPx + mBuffer), Bitmap.Config.ARGB_8888);
             c = new Canvas(bm);
-            shape = r.getDrawable(R.drawable.map_stop_icon);
+            shape = ContextCompat.getDrawable(context, R.drawable.map_stop_icon);
             shape.setBounds(0, 0, bm.getWidth(), (int) (bm.getHeight() - mBuffer));
             arrowPaintFill.setShader(
                     new LinearGradient(bm.getWidth() / 2, bm.getHeight(), bm.getWidth() / 2,
@@ -218,7 +219,7 @@ public class MarkerUtil {
             bm = Bitmap.createBitmap((int) (mPx + mBuffer),
                     (int) (mPx + mBuffer), Bitmap.Config.ARGB_8888);
             c = new Canvas(bm);
-            shape = r.getDrawable(R.drawable.map_stop_icon);
+            shape = ContextCompat.getDrawable(context, R.drawable.map_stop_icon);
             shape.setBounds(0, 0, mPx, mPx);
             arrowPaintFill.setShader(
                     new LinearGradient(bm.getWidth(), bm.getHeight(), bm.getWidth() - mBuffer,
@@ -232,7 +233,7 @@ public class MarkerUtil {
             directionAngle = 180f;  // Arrow is drawn pointing West, so rotate 180
             bm = Bitmap.createBitmap((int) (mPx + mBuffer), mPx, Bitmap.Config.ARGB_8888);
             c = new Canvas(bm);
-            shape = r.getDrawable(R.drawable.map_stop_icon);
+            shape = ContextCompat.getDrawable(context, R.drawable.map_stop_icon);
             shape.setBounds(0, 0, mPx, bm.getHeight());
             arrowPaintFill.setShader(
                     new LinearGradient(bm.getWidth(), bm.getHeight() / 2,
@@ -246,7 +247,7 @@ public class MarkerUtil {
             bm = Bitmap.createBitmap((int) (mPx + mBuffer),
                     (int) (mPx + mBuffer), Bitmap.Config.ARGB_8888);
             c = new Canvas(bm);
-            shape = r.getDrawable(R.drawable.map_stop_icon);
+            shape = ContextCompat.getDrawable(context, R.drawable.map_stop_icon);
             shape.setBounds(0, (int) mBuffer, mPx, bm.getHeight());
             // Shade with darkest color at tip of arrow
             arrowPaintFill.setShader(
