@@ -4,12 +4,12 @@ import android.content.Context;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -32,7 +32,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int NUM_MARKERS = 200;
 
     private Context mContext;
-    private GoogleMap mMap;
+    private BaseMapFragment mMapFragment;
     private boolean mRefresh = true;
     private ArrayList<String> mDir = new ArrayList<>(9);
     private ArrayList<Marker> mMarkers = new ArrayList<>(NUM_MARKERS);
@@ -42,10 +42,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        mMapFragment = BaseMapFragment.newInstance();
+
+        FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction().add(R.id.main_fragment_container, mMapFragment).commit();
+
+        mMapFragment.getMapAsync(this);
         mContext = this;
     }
 
@@ -66,7 +68,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
         initMap();
         initIcons();
         addMarkers();
@@ -94,7 +95,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             // Add a marker
             l = new LatLng(baseLat + latOffset, baseLong + longOffset);
-            Marker m = mMap.addMarker(new MarkerOptions()
+            Marker m = mMapFragment.getMap().addMarker(new MarkerOptions()
                             .position(l)
                             .icon(MarkerUtil
                                     .getBitmapDescriptorForBusStopDirection(mDir.get(index)))
@@ -117,7 +118,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
+                mMapFragment.getMap().animateCamera(
+                        CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
             }
         }, 500);
 
@@ -134,9 +136,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void initMap() {
-        UiSettings uiSettings = mMap.getUiSettings();
+        UiSettings uiSettings = mMapFragment.getMap().getUiSettings();
         // Show the location on the map
-        mMap.setMyLocationEnabled(true);
+        mMapFragment.getMap().setMyLocationEnabled(true);
         // Hide MyLocation button on map, since we have our own button
         uiSettings.setMyLocationButtonEnabled(false);
         // Hide Zoom controls
