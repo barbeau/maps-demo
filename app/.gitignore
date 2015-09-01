@@ -1,3 +1,4 @@
 /build
 /secure.properties
 /gradle.properties
+*.iml
