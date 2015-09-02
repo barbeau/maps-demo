@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBarActivity;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,7 +28,7 @@ import java.util.concurrent.TimeUnit;
  *
  * See http://stackoverflow.com/questions/32276570/jumping-markers-on-android-maps-api-v2
  */
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends ActionBarActivity implements OnMapReadyCallback {
 
     private static final int NUM_MARKERS = 200;
 
