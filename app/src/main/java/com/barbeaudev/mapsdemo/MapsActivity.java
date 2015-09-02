@@ -37,7 +37,14 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
     private boolean mRefresh = true;
     private ArrayList<String> mDir = new ArrayList<>(9);
     private ArrayList<Marker> mMarkers = new ArrayList<>(NUM_MARKERS);
-
+    private Handler mRefreshHandler = new Handler();
+    private Runnable mRefreshRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Toast.makeText(mContext, "Refreshing!", Toast.LENGTH_SHORT).show();
+            addMarkers();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +62,9 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
     @Override
     protected void onPause() {
         super.onPause();
+        // Cancel refreshes
         mRefresh = false;
+        mRefreshHandler.removeCallbacks(mRefreshRunnable);
     }
 
     /**
@@ -123,13 +132,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         if (mRefresh) {
             // Schedule a refresh of the markers in 60 seconds
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(mContext, "Refreshing!", Toast.LENGTH_SHORT).show();
-                    addMarkers();
-                }
-            }, TimeUnit.SECONDS.toMillis(60));
+            mRefreshHandler.postDelayed(mRefreshRunnable, TimeUnit.SECONDS.toMillis(60));
         }
     }
 
