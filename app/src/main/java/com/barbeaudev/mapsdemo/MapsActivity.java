@@ -1,11 +1,14 @@
 package com.barbeaudev.mapsdemo;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,6 +37,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     private Context mContext;
     private BaseMapFragment mMapFragment;
+    private FloatingActionButton mFabMyLocation;
     private boolean mRefresh = true;
     private ArrayList<String> mDir = new ArrayList<>(9);
     private ArrayList<Marker> mMarkers = new ArrayList<>(NUM_MARKERS);
@@ -57,6 +61,8 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         mMapFragment.getMapAsync(this);
         mContext = this;
+
+        initButton();
     }
 
     @Override
@@ -134,6 +140,18 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
             // Schedule a refresh of the markers in 60 seconds
             mRefreshHandler.postDelayed(mRefreshRunnable, TimeUnit.SECONDS.toMillis(60));
         }
+    }
+
+    private void initButton() {
+        mFabMyLocation = (FloatingActionButton) findViewById(R.id.btnMyLocation);
+        mFabMyLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                // Open another Maps Activity on top of this one
+                Intent myIntent = new Intent(mContext, MapsActivity.class);
+                startActivity(myIntent);
+            }
+        });
     }
 
     private void initMap() {
