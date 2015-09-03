@@ -131,8 +131,12 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mMapFragment.getMap().animateCamera(
-                        CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
+                if (mMapFragment != null) {
+                    GoogleMap m = mMapFragment.getMap();
+                    if (m != null) {
+                       m.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
+                    }
+                }
             }
         }, 500);
 
