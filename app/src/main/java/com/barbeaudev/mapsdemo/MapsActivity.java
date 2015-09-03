@@ -41,14 +41,14 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
     private boolean mRefresh = true;
     private ArrayList<String> mDir = new ArrayList<>(9);
     private ArrayList<Marker> mMarkers = new ArrayList<>(NUM_MARKERS);
-    private Handler mRefreshHandler = new Handler();
-    private Runnable mRefreshRunnable = new Runnable() {
-        @Override
-        public void run() {
-            Toast.makeText(mContext, "Refreshing!", Toast.LENGTH_SHORT).show();
-            addMarkers();
-        }
-    };
+//    private Handler mRefreshHandler = new Handler();
+//    private Runnable mRefreshRunnable = new Runnable() {
+//        @Override
+//        public void run() {
+//            Toast.makeText(mContext, "Refreshing!", Toast.LENGTH_SHORT).show();
+//            addMarkers();
+//        }
+//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +69,8 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
     protected void onPause() {
         super.onPause();
         // Cancel refreshes
-        mRefresh = false;
-        mRefreshHandler.removeCallbacks(mRefreshRunnable);
+//        mRefresh = false;
+//        mRefreshHandler.removeCallbacks(mRefreshRunnable);
     }
 
     /**
@@ -136,10 +136,10 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
             }
         }, 500);
 
-        if (mRefresh) {
-            // Schedule a refresh of the markers in 60 seconds
-            mRefreshHandler.postDelayed(mRefreshRunnable, TimeUnit.SECONDS.toMillis(60));
-        }
+//        if (mRefresh) {
+//            // Schedule a refresh of the markers in 60 seconds
+//            mRefreshHandler.postDelayed(mRefreshRunnable, TimeUnit.SECONDS.toMillis(60));
+//        }
     }
 
     private void initButton() {
